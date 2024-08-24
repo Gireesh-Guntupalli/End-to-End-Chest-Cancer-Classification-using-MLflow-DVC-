@@ -1,0 +1,24 @@
+tensorflow==2.12.0
+pandas
+gdown
+mlflow==2.2.2
+notebook
+numpy
+matplotlib
+seaborn
+python-box==6.0.2
+pyYAML
+tqdm
+ensure==1.0.2
+joblib
+types-pyYAML
+scipy
+Flask
+Flask-Cors
+-e .
+
+# In Python projects, the presence of -e . in the requirements.txt file alongside a setup.py file indicates that you are working with a package that is being installed in "editable" or "development" mode. Here's what each component means:
+
+# -e .
+# -e: This flag stands for "editable." When you install a package in editable mode, it allows you to make changes to the source code and have those changes reflected immediately without needing to reinstall the package.
+# .: This refers to the current directory. Essentially, . is the path to your package, so -e . means "install the package located in the current directory in editable mode."
