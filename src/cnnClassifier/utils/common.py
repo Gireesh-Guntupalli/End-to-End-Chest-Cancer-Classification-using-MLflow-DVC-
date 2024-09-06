@@ -4,7 +4,7 @@ import os
 from box.exceptions import BoxValueError  ## to handle exceptions
 from cnnClassifier import logger
 import yaml
-import jason
+import json
 import joblib
 from ensure import ensure_annotations
 from box import ConfigBox

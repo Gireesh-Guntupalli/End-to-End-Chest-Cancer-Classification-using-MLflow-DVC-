@@ -1,0 +1,14 @@
+
+## A config.yaml file is typically used to store configuration settings in a structured, human-readable format. 
+## These files are commonly used in various applications, including software projects, data pipelines, and DevOps tools, to define parameters, settings, or preferences that the program needs to function.
+
+## In software development and data science, artifacts refer to files or objects that are produced as a result of a process or build. These can include compiled code, data files, logs, models, or any output generated during the execution of a workflow or pipeline. 
+## Artifacts are often stored, shared, or used for further analysis.
+
+artifacts_root: artifacts
+
+data_ingestion:
+  root_dir: artifacts/data_ingestion
+  source_URL: https://drive.google.com/file/d/1z0mreUtRmR-P-magILsDR3T7M6IkGXtY/view?usp=sharing
+  local_data_file: artifacts/data_ingestion/data.zip
+  unzip_dir: artifacts/data_ingestion
