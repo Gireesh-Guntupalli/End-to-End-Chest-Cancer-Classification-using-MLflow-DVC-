@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/Data%20Science%20Projects/DL-Project/End-to-End-Chest-Cancer-Classification-using-MLflow-DVC-/mlruns/0/c460a3ea9ce946c98ed620de6711dedf/artifacts
+end_time: 1725889811214
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: c460a3ea9ce946c98ed620de6711dedf
+run_name: mercurial-hog-722
+run_uuid: c460a3ea9ce946c98ed620de6711dedf
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1725889792471
+status: 3
+tags: []
+user_id: giree
