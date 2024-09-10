@@ -15,3 +15,6 @@
 ## MLflow:
 <img width="937" alt="image" src="https://github.com/user-attachments/assets/cab9bb27-b3ee-4b5e-909c-09b8b3625d9a">
 <img width="943" alt="image" src="https://github.com/user-attachments/assets/e230a81f-4fa4-476e-b8c7-ef3e2f363dfb">
+
+## DVC
+<img width="733" alt="image" src="https://github.com/user-attachments/assets/ed7c2595-c547-46c1-976a-d96755d7dc3b">
