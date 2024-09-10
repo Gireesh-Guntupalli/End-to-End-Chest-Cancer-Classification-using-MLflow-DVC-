@@ -36,6 +36,7 @@ This project focuses on developing an end-to-end pipeline for chest cancer CT sc
 7. **Update the Pipeline**: Adjust pipeline stages in DVC, making sure all dependencies are well-defined.
 8. **Update `main.py`**: Integrate all updates in the main entry script that triggers the end-to-end pipeline.
 9. **Update `dvc.yaml`**: Ensure that the DVC pipeline reflects the correct order of execution for each stage.
+
 ## Model Details
 
 - **Base Model**: VGG16 (Pretrained on ImageNet)
@@ -82,11 +83,12 @@ This project is structured into 5 pipelines:
  
 ## Prerequisites
 
-Install the required packages using:
+	Install the required packages using:
+	
+	```bash
+	pip install -r requirements.txt
 
-```bash
-pip install -r requirements.txt
- 
+
 ## Experiment Tracking with MLflow  
 ## MLflow:
 
