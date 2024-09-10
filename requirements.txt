@@ -15,6 +15,7 @@ types-pyYAML
 scipy
 Flask
 Flask-Cors
+dvc
 -e .
 
 # In Python projects, the presence of -e . in the requirements.txt file alongside a setup.py file indicates that you are working with a package that is being installed in "editable" or "development" mode. Here's what each component means:
