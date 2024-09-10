@@ -6,7 +6,7 @@ This project focuses on developing an end-to-end pipeline for chest cancer CT sc
 
 ## Table of Contents
 - [Project Architecture](#project-architecture)
-- [Workflows](#work-flows)
+- [Workflows](#workflows)
 - [Model Details](#model-details)
 - [Pipelines](#pipelines)
 - [Technologies Used](#technologies-used)
@@ -80,6 +80,13 @@ This project is structured into 5 pipelines:
   - **Docker**: Used for containerization of the app.
   - **AWS EC2**: Used for deployment of the Flask app with continuous integration and delivery.
  
+## Prerequisites
+
+Install the required packages using:
+
+```bash
+pip install -r requirements.txt
+ 
 ## Experiment Tracking with MLflow  
 ## MLflow:
 
@@ -107,9 +114,9 @@ This project is structured into 5 pipelines:
 ## CI/CD Deployment
 ### AWS-CICD-Deployment-with-Github-Actions
 
-## 1. Login to AWS console.
+#### 1. Login to AWS console.
 
-## 2. Create IAM user for deployment
+#### 2. Create IAM user for deployment
 
 	#with specific access
 
@@ -137,13 +144,13 @@ This project is structured into 5 pipelines:
 	2. AmazonEC2FullAccess
 
 	
-## 3. Create ECR repo to store/save docker image
+#### 3. Create ECR repo to store/save docker image
     - Save the URI: 566373416292.dkr.ecr.us-east-1.amazonaws.com/chicken
 
 	
-## 4. Create EC2 machine (Ubuntu) 
+#### 4. Create EC2 machine (Ubuntu) 
 
-## 5. Open EC2 and Install docker in EC2 Machine:
+#### 5. Open EC2 and Install docker in EC2 Machine:
 	
 	
 	#optinal
@@ -162,11 +169,11 @@ This project is structured into 5 pipelines:
 
 	newgrp docker
 	
-# 6. Configure EC2 as self-hosted runner:
+#### 6. Configure EC2 as self-hosted runner:
     setting>actions>runner>new self hosted runner> choose os> then run command one by one
 
 
-# 7. Setup github secrets:
+#### 7. Setup github secrets:
 
     AWS_ACCESS_KEY_ID=
 
@@ -180,7 +187,4 @@ This project is structured into 5 pipelines:
 
 
 
-Install the required packages using:
 
-```bash
-pip install -r requirements.txt
