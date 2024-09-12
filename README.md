@@ -114,7 +114,74 @@ This project is structured into 5 pipelines:
 3. dvc dag
 
 ## CI/CD Deployment
-### AWS-CICD-Deployment-with-Github-Actions
+### CI/CD Pipeline with GitHub Actions, all about main.yaml file
+
+This repository contains a GitHub Actions workflow configuration for automating a **CI/CD (Continuous Integration and Continuous Delivery/Deployment)** pipeline. The pipeline ensures that code is automatically tested, built, and deployed using **Docker** and **Amazon Elastic Container Registry (ECR)**.
+
+### Workflow Overview
+
+The GitHub Actions workflow is defined in the `main.yaml` file. It performs the following key tasks:
+
+#### 1. Continuous Integration (CI)
+Ensures that the codebase is linted and tested before proceeding to deployment.
+
+- **Triggered**: When code is pushed to the `main` branch (excluding changes to `README.md`).
+- **Steps**:
+  - **Checkout Code**: Pulls the latest code from the repository.
+  - **Lint Code**: Runs linting to check for code quality issues.
+  - **Run Unit Tests**: Executes unit tests to validate the code.
+
+#### 2. Continuous Delivery (CD)
+Builds and pushes the application as a Docker image to **Amazon ECR** after the code passes the CI phase.
+
+- **Steps**:
+  - **Checkout Code**: Pulls the latest code from the repository.
+  - **Install Utilities**: Installs necessary tools (e.g., `jq`, `unzip`).
+  - **Configure AWS Credentials**: Uses AWS credentials stored as GitHub Secrets to authenticate with AWS services.
+  - **Login to Amazon ECR**: Authenticates to Amazon ECR using AWS credentials.
+  - **Build and Push Docker Image**: Builds a Docker image from the repository and pushes it to Amazon ECR.
+
+#### 3. Continuous Deployment (CD)
+Deploys the Docker image from Amazon ECR to a self-hosted environment.
+
+- **Steps**:
+  - **Checkout Code**: Pulls the latest code from the repository.
+  - **Configure AWS Credentials**: Authenticates with AWS to access the ECR registry.
+  - **Login to Amazon ECR**: Logs in to the Amazon ECR Docker registry.
+  - **Pull Latest Docker Image**: Pulls the latest Docker image from ECR.
+  - **Run Docker Container**: Starts the application by running the Docker image on the server.
+  - **Clean Up**: Cleans up unused Docker images and containers to free up resources.
+
+### AWS Integration
+
+This workflow uses **AWS** services, including:
+- **Amazon Elastic Container Registry (ECR)**: To store Docker images.
+- **AWS Credentials**: Configured using GitHub Secrets to securely authenticate with AWS services.
+
+#### Secrets Required
+The following secrets must be added to the GitHub repository for the workflow to function:
+- `AWS_ACCESS_KEY_ID`: AWS access key for authentication.
+- `AWS_SECRET_ACCESS_KEY`: AWS secret key for authentication.
+- `AWS_REGION`: AWS region where the services are hosted.
+- `ECR_REPOSITORY_NAME`: Name of the Amazon ECR repository.
+
+### Prerequisites
+
+- AWS account with permissions to use ECR.
+- Docker installed on the self-hosted runner for deployment.
+
+### Conclusion of CI/CD 
+
+This pipeline automates the process of:
+1. **Testing**: Ensuring code quality through linting and unit tests.
+2. **Building**: Creating a Docker image of the application.
+3. **Pushing**: Uploading the Docker image to Amazon ECR.
+4. **Deploying**: Running the Docker image on a server to make the application live.
+
+With this setup, code can be automatically tested, built, and deployed with minimal manual intervention, streamlining the development and deployment process.
+
+
+### AWS-CICD-Deployment-with-Github-Actions in detail
 
 #### 1. Login to AWS console.
 
