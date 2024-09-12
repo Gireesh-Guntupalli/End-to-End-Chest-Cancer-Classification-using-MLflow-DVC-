@@ -1,0 +1,130 @@
+# Define the name of the GitHub Actions workflow
+name: workflow
+
+# Trigger the workflow on a push event to the 'main' branch, 
+# but ignore pushes that only change the 'README.md' file
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+
+# Define permissions for the workflow.
+# 'id-token: write' allows generating OIDC tokens.
+# 'contents: read' gives read access to the repository content.
+permissions:
+  id-token: write
+  contents: read
+
+# Define jobs for the workflow
+jobs:
+  # Job for Continuous Integration (CI)
+  integration:
+    # Display name for the CI job
+    name: Continuous Integration
+    # Specify the runner environment for the job, using the latest Ubuntu image
+    runs-on: ubuntu-latest
+    steps:
+      # Step to checkout the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step to run a linting check on the code (just an echo for now)
+      - name: Lint code
+        run: echo "Linting repository"
+
+      # Step to run unit tests (just an echo for now)
+      - name: Run unit tests
+        run: echo "Running unit tests"
+
+  # Job for Continuous Delivery (CD)
+  build-and-push-ecr-image:
+    # Display name for the CD job
+    name: Continuous Delivery
+    # This job depends on the successful completion of the 'integration' job
+    needs: integration
+    # Use the latest Ubuntu runner
+    runs-on: ubuntu-latest
+    steps:
+      # Step to checkout the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step to install required utilities like 'jq' and 'unzip'
+      - name: Install Utilities
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq unzip
+
+      # Step to configure AWS credentials using stored GitHub secrets
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step to log in to Amazon ECR (Elastic Container Registry)
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Step to build, tag, and push a Docker image to the Amazon ECR repository
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+          IMAGE_TAG: latest
+        run: |
+          # Build a Docker image and tag it
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          # Push the Docker image to the ECR registry
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          # Output the image URI for future use
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          
+  # Job for Continuous Deployment (CD)
+  Continuous-Deployment:
+    # This job depends on the successful completion of the 'build-and-push-ecr-image' job
+    needs: build-and-push-ecr-image
+    # Use a self-hosted runner for this job
+    runs-on: self-hosted
+    steps:
+      # Step to checkout the repository code
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Step to configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step to log in to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      
+      # Step to pull the latest Docker image from the ECR repository
+      - name: Pull latest images
+        run: |
+         docker pull ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+         
+      # Optional step (commented out) to stop and remove the running container if it exists
+      # - name: Stop and remove container if running
+      #   run: |
+      #    docker ps -q --filter "name=cnncls" | grep -q . && docker stop cnncls && docker rm -fv cnncls
+       
+      # Step to run the Docker container with the latest image, exposing port 8080
+      - name: Run Docker Image to serve users
+        run: |
+         docker run -d -p 8080:8080 --name=cnncls -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+
+      # Step to clean up unused Docker images and containers
+      - name: Clean previous images and containers
+        run: |
+         docker system prune -f
